@@ -3,6 +3,17 @@ import index from "./index.html";
 
 const server = serve({
   routes: {
+    // Serve static images
+    "/images/*": async (req) => {
+      const url = new URL(req.url);
+      const filePath = `.${url.pathname}`;
+      const file = Bun.file(filePath);
+      if (await file.exists()) {
+        return new Response(file);
+      }
+      return new Response("Not found", { status: 404 });
+    },
+
     // Serve index.html for all unmatched routes.
     "/*": index,
 
