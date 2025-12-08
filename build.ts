@@ -33,7 +33,7 @@ Example:
   process.exit(0);
 }
 
-const toCamelCase = (str: string): string => str.replace(/-([a-z])/g, g => g[1].toUpperCase());
+const toCamelCase = (str: string): string => str.replace(/-([a-z])/g, (_, p1) => p1.toUpperCase());
 
 const parseValue = (value: string): any => {
   if (value === "true") return true;
@@ -48,7 +48,7 @@ const parseValue = (value: string): any => {
 };
 
 function parseArgs(): Partial<Bun.BuildConfig> {
-  const config: Partial<Bun.BuildConfig> = {};
+  const config: any = {};
   const args = process.argv.slice(2);
 
   for (let i = 0; i < args.length; i++) {
@@ -81,9 +81,13 @@ function parseArgs(): Partial<Bun.BuildConfig> {
     key = toCamelCase(key);
 
     if (key.includes(".")) {
-      const [parentKey, childKey] = key.split(".");
-      config[parentKey] = config[parentKey] || {};
-      config[parentKey][childKey] = parseValue(value);
+      const parts = key.split(".");
+      const parentKey = parts[0];
+      const childKey = parts[1];
+      if (parentKey && childKey) {
+        config[parentKey] = config[parentKey] || {};
+        config[parentKey][childKey] = parseValue(value);
+      }
     } else {
       config[key] = parseValue(value);
     }
@@ -147,3 +151,28 @@ console.table(outputTable);
 const buildTime = (end - start).toFixed(2);
 
 console.log(`\n✅ Build completed in ${buildTime}ms\n`);
+
+// Copy static assets for GitHub Pages
+console.log("📁 Copying static assets...");
+
+// Copy CNAME file
+const cnameSource = path.join(process.cwd(), "CNAME");
+const cnameDest = path.join(outdir, "CNAME");
+if (existsSync(cnameSource)) {
+  await Bun.write(cnameDest, await Bun.file(cnameSource).text());
+  console.log("  ✓ CNAME");
+}
+
+// Copy images directory
+const imagesSource = path.join(process.cwd(), "images");
+const imagesDest = path.join(outdir, "images");
+if (existsSync(imagesSource)) {
+  const { mkdir, copyFile } = await import("fs/promises");
+  await mkdir(imagesDest, { recursive: true });
+  for await (const file of new Bun.Glob("*").scan(imagesSource)) {
+    await copyFile(path.join(imagesSource, file), path.join(imagesDest, file));
+    console.log(`  ✓ images/${file}`);
+  }
+}
+
+console.log("\n🎉 All assets copied!\n");
