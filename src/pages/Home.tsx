@@ -18,8 +18,8 @@ export function Home() {
             {/* Hero Section - Extended to full screen height */}
             <section className="relative pt-32 pb-10 px-6 min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">
 
-                {/* Main Content */}
-                <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center justify-center flex-grow">
+                {/* Main Content - Shifted up */}
+                <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center justify-center flex-grow pb-40">
                     <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-amber-200 shadow-sm animate-bounce-slow">
                         <Sparkles size={24} className="text-[var(--color-accent)]" />
                         <span className="font-heading font-bold text-[var(--color-primary)] tracking-wide text-sm uppercase">Early Access Coming Soon</span>
@@ -92,21 +92,21 @@ export function Home() {
                 </div>
             </footer>
 
-            {/* Boss Fixed at Bottom Left - Moved left (left-0) and down (translate-y-5) */}
-            <div className="fixed bottom-0 left-[-40px] md:left-[-80px] z-50 pointer-events-none animate-float">
+            {/* Boss Fixed at Bottom Left - Mobile Optimized */}
+            <div className="fixed bottom-0 left-[-30px] md:left-[-80px] z-50 pointer-events-none animate-float">
                 <img
                     src="/images/boss.png"
                     alt="Boss"
-                    className="w-[400px] md:w-[600px] h-auto drop-shadow-2xl translate-y-8 object-contain"
+                    className="w-[180px] md:w-[600px] h-auto drop-shadow-2xl translate-y-2 md:translate-y-8 object-contain"
                 />
             </div>
 
-            {/* Characters Fixed at Bottom Right */}
-            <div className="fixed bottom-0 right-5 z-50 pointer-events-none animate-float">
+            {/* Characters Fixed at Bottom Right - Mobile Optimized */}
+            <div className="fixed bottom-0 right-[-20px] md:right-5 z-50 pointer-events-none animate-float">
                 <img
                     src="/images/characters.png"
                     alt="Characters"
-                    className="w-[300px] md:w-[450px] h-auto drop-shadow-2xl translate-y-4 object-contain"
+                    className="w-[160px] md:w-[450px] h-auto drop-shadow-2xl translate-y-2 md:translate-y-4 object-contain"
                 />
             </div>
 
